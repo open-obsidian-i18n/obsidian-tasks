@@ -1,5 +1,6 @@
 name: Sync English dictionary
 on:
+  workflow_dispatch:
   push:
     tags:
       - "*"
