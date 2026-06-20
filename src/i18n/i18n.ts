@@ -181,6 +181,15 @@ export function initI18n(plugin: Plugin): void {
                 externalDictionaries[locale] || BUILTIN_LOCALES[locale],
             validateDictionary: () => ({ valid: true }),
         });
+
+        // Attach i18n adapter to plugin instance so i18n-plus can find it
+        (plugin as any).i18n = {
+            pluginId: plugin.manifest.id,
+            getLocale: () => currentLocale,
+            setLocale: (l: string) => { setLocale(l); },
+            getBuiltinLocales: () => Object.keys(BUILTIN_LOCALES),
+            getExternalLocales: () => Object.keys(externalDictionaries),
+        };
     };
 
     register();
