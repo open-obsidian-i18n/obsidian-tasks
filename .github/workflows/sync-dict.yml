@@ -1,0 +1,38 @@
+name: Sync English dictionary
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Export English dictionary
+        run: node scripts/export-en-dict.js
+
+      - name: Upload dictionary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dict-en-obsidian-tasks-plugin
+          path: ./dist/obsidian-tasks-plugin_en.json
+          retention-days: 1
+
+  submit:
+    needs: extract
+    uses: open-obsidian-i18n/dictionaries/.github/workflows/submit-dictionary.yml@main
+    with:
+      plugin-id: obsidian-tasks-plugin
+      plugin-version: ${{ github.ref_name }}
+      artifact-name: dict-en-obsidian-tasks-plugin
+    secrets:
+      token: ${{ secrets.DICT_REPO_TOKEN }}
