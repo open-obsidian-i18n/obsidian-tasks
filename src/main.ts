@@ -1,7 +1,7 @@
 import { Plugin, type Reference, getLinkpath } from 'obsidian';
 
 import type { Task } from 'Task/Task';
-import { i18n, initializeI18n } from './i18n/i18n';
+import { i18n, initializeI18n, initI18n } from './i18n/i18n';
 import { Cache, State } from './Obsidian/Cache';
 import { Commands } from './Commands';
 import { GlobalQuery } from './Config/GlobalQuery';
@@ -34,6 +34,7 @@ export default class TasksPlugin extends Plugin {
 
     async onload() {
         await initializeI18n();
+        initI18n(this);
 
         logging.registerConsoleLogger();
         log('info', i18n.t('main.loadingPlugin', { name: this.manifest.name, version: this.manifest.version }));
